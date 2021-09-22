@@ -19,6 +19,14 @@ export const App = () => {
         onClose={() => {
           setSpotlightOpen(false);
         }}
+        globalComands={[
+          {
+            name: "Global comand 1",
+            callback: () => {
+              console.log("Global comand 1");
+            },
+          },
+        ]}
       />
       <div className={"pt-10"}>
         <ActionButton

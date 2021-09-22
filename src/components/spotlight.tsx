@@ -52,9 +52,11 @@ export function useSpotlightAction(action: Action) {
 export function Spotlight({
   open,
   onClose,
+  globalComands,
 }: {
   open: boolean;
   onClose: () => void;
+  globalComands: Action[];
 }) {
   if (!open) return null;
   const { data } = useContext(SpotlightContext);
@@ -63,12 +65,13 @@ export function Spotlight({
   const [cursor, setCursor] = useState(0);
 
   const items = useMemo(() => {
-    if (search === "") return data;
-    return fuzzySearch(search, data, {
+    const dataToSearch = [...globalComands, ...data];
+    if (search === "") return dataToSearch;
+    return fuzzySearch(search, dataToSearch, {
       keySelector: (i) => i.name,
       normalizeWhitespace: true,
     });
-  }, [search, data]);
+  }, [search, data, globalComands]);
 
   const selected = useMemo(() => items.at(cursor), [cursor, items]);
 
@@ -78,7 +81,12 @@ export function Spotlight({
   };
 
   const wrapCursor = useCallback(
-    (cursor: number) => Math.abs(cursor % items.length),
+    (cursor: number) => {
+      // NOTE: mc stands for maximum cursor and cc stands for curent cursor
+      const mc = items.length;
+      const cc = cursor;
+      return cc >= 0 ? cc % mc : ((cc % mc) + mc) % mc;
+    },
     [items]
   );
 
