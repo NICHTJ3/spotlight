@@ -26,27 +26,23 @@ const config = {
     ],
   },
   plugins: [
-    new HtmlWebpackPlugin({
-      template: "./src/index.html",
-      filename: "index.html",
-      inject: "body",
-    }),
+    new HtmlWebpackPlugin(),
   ],
-  optimization: isProd
-    ? {
-        minimizer: [new TerserWebpackPlugin()],
-      }
-    : undefined,
-  devServer: !isProd
-    ? {
-        port: 9000,
-        open: true,
-        hot: true,
-        compress: true,
-        stats: "errors-only",
-        overlay: true,
-      }
-    : undefined,
+  optimization: {
+    minimizer: [isProd && new TerserWebpackPlugin()].filter(Boolean),
+  },
+  devServer: {
+    port: 3000,
+    open: true,
+    hot: true,
+    compress: true,
+    client: {
+      overlay: {
+        errors: true,
+        warnings: false,
+      },
+    },
+  },
 };
 
 module.exports = config;
