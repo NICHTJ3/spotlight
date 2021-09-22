@@ -23,11 +23,22 @@ const config = {
         use: "babel-loader",
         exclude: /node_modules/,
       },
+      {
+        test: /\.s[ac]ss$/i,
+        use: [
+          // Creates `style` nodes from JS strings
+          "style-loader",
+          // Translates CSS into CommonJS
+          "css-loader",
+          // Compiles Sass to CSS
+          "sass-loader",
+          // Load css files with postcss
+          "postcss-loader", 
+        ],
+      },
     ],
   },
-  plugins: [
-    new HtmlWebpackPlugin(),
-  ],
+  plugins: [new HtmlWebpackPlugin()],
   optimization: {
     minimizer: [isProd && new TerserWebpackPlugin()].filter(Boolean),
   },
