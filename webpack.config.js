@@ -33,12 +33,16 @@ const config = {
           // Compiles Sass to CSS
           "sass-loader",
           // Load css files with postcss
-          "postcss-loader", 
+          "postcss-loader",
         ],
       },
     ],
   },
-  plugins: [new HtmlWebpackPlugin()],
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: "./index.html",
+    }),
+  ],
   optimization: {
     minimizer: [isProd && new TerserWebpackPlugin()].filter(Boolean),
   },
