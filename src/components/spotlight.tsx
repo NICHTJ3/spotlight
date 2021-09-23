@@ -1,3 +1,5 @@
+import clsx from "clsx";
+import { search as fuzzySearch } from "fast-fuzzy";
 import React, {
   ReactNode,
   useCallback,
@@ -7,9 +9,6 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { search as fuzzySearch } from "fast-fuzzy";
-import clsx from "clsx";
-import { useKeyPress } from "../hooks/useKeyPress";
 import { useFocusTrap } from "../hooks/useFocusTrap";
 
 export type Action = { name: string; callback: () => void };
@@ -90,58 +89,25 @@ export function Spotlight({
     [items]
   );
 
-  const ref = useRef<HTMLInputElement>(null);
-  // Focus search box on spotlight open
-  useEffect(() => {
-    ref.current?.focus();
-  }, []);
-
-  useKeyPress({
-    ref,
-    key: "ArrowDown",
-    callback: () => {
-      setCursor((cursor) => wrapCursor(cursor + 1));
-    },
-  });
-  useKeyPress({
-    ref,
-    key: "Tab",
-    callback: () => {
-      setCursor((cursor) => wrapCursor(cursor + 1));
-    },
-  });
-  useKeyPress({
-    ref,
-    key: "Tab",
-    modifiers: ["shift"],
-    callback: () => {
-      setCursor((cursor) => wrapCursor(cursor - 1));
-    },
-  });
-
-  useKeyPress({
-    ref,
-    key: "ArrowUp",
-    callback: () => {
-      setCursor((cursor) => wrapCursor(cursor - 1));
-    },
-  });
-
-  useKeyPress({
-    ref,
-    key: "Enter",
-    callback: () => {
-      onClick();
-    },
-  });
-
-  useKeyPress({
-    ref,
-    key: "Escape",
-    callback: () => {
-      onClose();
-    },
-  });
+  const handleKeyDown = ({ code, shiftKey }: React.KeyboardEvent) => {
+    switch (code) {
+      case "ArrowUp":
+        setCursor((cursor) => wrapCursor(cursor - 1));
+        break;
+      case "ArrowDown":
+        setCursor((cursor) => wrapCursor(cursor + 1));
+        break;
+      case "Tab":
+        setCursor((cursor) => wrapCursor(shiftKey ? cursor - 1 : cursor + 1));
+        break;
+      case "Escape":
+        onClose();
+        break;
+      case "Enter":
+        onClick();
+        break;
+    }
+  };
 
   const focusTrap = useFocusTrap();
 
@@ -157,10 +123,11 @@ export function Spotlight({
       >
         <input
           value={search}
-          ref={ref}
+          autoFocus={true}
           onChange={(e) => {
             setSearch(e.target.value);
           }}
+          onKeyDown={handleKeyDown}
           onBlur={() => {
             onClose();
           }}
