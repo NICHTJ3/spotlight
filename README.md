@@ -1,6 +1,7 @@
 # Spotlight
 
 ## What
+
 This project was created as a proof of concept for MacOS `Spotlight` like
 functionality in any app. The idea behind it is you could fuzzy search all
 ActionButtons on a page as well as some global actions that exist on all pages
@@ -8,6 +9,21 @@ and interact with them indirectly
 
 <img width="893" alt="Screen Shot 2021-09-23 at 2 10 46 PM" src="https://user-images.githubusercontent.com/39316919/134445215-1d0aa9c7-a18c-42ab-8c79-8952f0fec6fa.png">
 
+## Getting up and running
+
+Install dependencies
+
+```sh
+pnpm install
+```
+
+Running the project
+
+```sh
+pnpm dev
+```
+
+Default keybinding to open spotlight once closed is `ctrl+<space>`
 
 ## What I might change retrospectively if I was ever to use it in an actual project
 
